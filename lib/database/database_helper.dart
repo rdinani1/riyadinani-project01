@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import '../models/habit.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -35,6 +36,36 @@ class DatabaseHelper {
         is_completed INTEGER NOT NULL DEFAULT 0
       )
     ''');
+  }
+
+  Future<int> insertHabit(Habit habit) async {
+    final db = await instance.database;
+    return await db.insert('habits', habit.toMap());
+  }
+
+  Future<List<Habit>> getHabits() async {
+    final db = await instance.database;
+    final result = await db.query('habits', orderBy: 'id DESC');
+    return result.map((map) => Habit.fromMap(map)).toList();
+  }
+
+  Future<int> updateHabit(Habit habit) async {
+    final db = await instance.database;
+    return await db.update(
+      'habits',
+      habit.toMap(),
+      where: 'id = ?',
+      whereArgs: [habit.id],
+    );
+  }
+
+  Future<int> deleteHabit(int id) async {
+    final db = await instance.database;
+    return await db.delete(
+      'habits',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<void> close() async {
