@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +20,8 @@ class HabitMasteryLeagueApp extends StatefulWidget {
   });
 
   @override
-  State<HabitMasteryLeagueApp> createState() => _HabitMasteryLeagueAppState();
+  State<HabitMasteryLeagueApp> createState() =>
+      _HabitMasteryLeagueAppState();
 }
 
 class _HabitMasteryLeagueAppState extends State<HabitMasteryLeagueApp> {
@@ -49,7 +50,7 @@ class _HabitMasteryLeagueAppState extends State<HabitMasteryLeagueApp> {
         useMaterial3: true,
       ),
       darkTheme: ThemeData.dark(useMaterial3: true),
-      home: HomeScreen(
+      home: SplashScreen(
         isDarkMode: _isDarkMode,
         onThemeChanged: _updateTheme,
       ),

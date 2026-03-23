@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../database/database_helper.dart';
-import '../models/habit.dart';
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
@@ -25,14 +24,18 @@ class _StatsScreenState extends State<StatsScreen> {
 
     setState(() {
       totalHabits = habits.length;
-      completedHabits =
-          habits.where((habit) => habit.isCompleted).length;
+      completedHabits = habits.where((habit) => habit.isCompleted).length;
       isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final incompleteHabits = totalHabits - completedHabits;
+    final completionRate = totalHabits == 0
+        ? 0.0
+        : (completedHabits / totalHabits) * 100;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Habit Stats'),
@@ -74,11 +77,19 @@ class _StatsScreenState extends State<StatsScreen> {
                   const SizedBox(height: 12),
                   Card(
                     child: ListTile(
+                      title: const Text('Incomplete Habits'),
+                      trailing: Text(
+                        incompleteHabits.toString(),
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Card(
+                    child: ListTile(
                       title: const Text('Completion Rate'),
                       trailing: Text(
-                        totalHabits == 0
-                            ? '0%'
-                            : '${((completedHabits / totalHabits) * 100).toStringAsFixed(1)}%',
+                        '${completionRate.toStringAsFixed(1)}%',
                         style: const TextStyle(fontSize: 20),
                       ),
                     ),
