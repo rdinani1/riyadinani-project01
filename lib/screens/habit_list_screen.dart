@@ -70,6 +70,34 @@ class _HabitListScreenState extends State<HabitListScreen> {
     }
   }
 
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.inbox,
+            size: 90,
+            color: Colors.grey,
+          ),
+          SizedBox(height: 16),
+          Text(
+            'No habits yet',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Tap the + button to create your first habit',
+            style: TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,16 +108,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _habits.isEmpty
-              ? const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Text(
-                      'No habits yet.\nPull down or tap + to add your first habit.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
-                )
+              ? _buildEmptyState()
               : RefreshIndicator(
                   onRefresh: _loadHabits,
                   child: ListView.builder(
