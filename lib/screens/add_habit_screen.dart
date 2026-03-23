@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../database/database_helper.dart';
+import '../models/habit.dart';
 
 class AddHabitScreen extends StatefulWidget {
   const AddHabitScreen({super.key});
@@ -28,13 +30,27 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
     super.dispose();
   }
 
-  void _saveHabit() {
+  Future<void> _saveHabit() async {
     if (_formKey.currentState!.validate()) {
+      final newHabit = Habit(
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
+        category: _selectedCategory,
+        createdAt: DateTime.now().toIso8601String(),
+        isCompleted: false,
+      );
+
+      await DatabaseHelper.instance.insertHabit(newHabit);
+
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Habit form is valid. Database save comes next.'),
+          content: Text('Habit saved successfully!'),
         ),
       );
+
+      Navigator.pop(context, true);
     }
   }
 
@@ -80,7 +96,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                   border: OutlineInputBorder(),
                 ),
                 items: _categories.map((category) {
-                  return DropdownMenuItem(
+                  return DropdownMenuItem<String>(
                     value: category,
                     child: Text(category),
                   );
