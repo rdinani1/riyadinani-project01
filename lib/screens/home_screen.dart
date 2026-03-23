@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'add_habit_screen.dart';
+import 'habit_list_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,12 +12,12 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Center(
         child: ElevatedButton(
-          child: const Text('Add Your First Habit'),
+          child: const Text('View My Habits'),
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const AddHabitScreen(),
+                builder: (context) => const HabitListScreen(),
               ),
             );
           },
