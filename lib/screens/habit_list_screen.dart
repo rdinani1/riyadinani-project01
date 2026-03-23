@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../database/database_helper.dart';
 import '../models/habit.dart';
 import 'add_habit_screen.dart';
+import 'habit_detail_screen.dart';
 
 class HabitListScreen extends StatefulWidget {
   const HabitListScreen({super.key});
@@ -41,6 +42,15 @@ class _HabitListScreenState extends State<HabitListScreen> {
     }
   }
 
+  void _openHabitDetails(Habit habit) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HabitDetailScreen(habit: habit),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +86,7 @@ class _HabitListScreenState extends State<HabitListScreen> {
                               ? Icons.check_circle
                               : Icons.radio_button_unchecked,
                         ),
+                        onTap: () => _openHabitDetails(habit),
                       ),
                     );
                   },
