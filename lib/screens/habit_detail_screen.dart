@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../database/database_helper.dart';
 import '../models/habit.dart';
+import 'add_habit_screen.dart';
 
 class HabitDetailScreen extends StatefulWidget {
   final Habit habit;
@@ -50,6 +51,24 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _editHabit() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddHabitScreen(habit: _habit),
+      ),
+    );
+
+    if (result == true && _habit.id != null) {
+      final habits = await DatabaseHelper.instance.getHabits();
+      final refreshedHabit = habits.firstWhere((habit) => habit.id == _habit.id);
+
+      setState(() {
+        _habit = refreshedHabit;
+      });
+    }
   }
 
   Future<void> _deleteHabit() async {
@@ -151,6 +170,11 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                         ? 'Mark as Not Completed'
                         : 'Mark as Completed',
                   ),
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: _editHabit,
+                  child: const Text('Edit Habit'),
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton(

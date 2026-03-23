@@ -3,7 +3,9 @@ import '../database/database_helper.dart';
 import '../models/habit.dart';
 
 class AddHabitScreen extends StatefulWidget {
-  const AddHabitScreen({super.key});
+  final Habit? habit;
+
+  const AddHabitScreen({super.key, this.habit});
 
   @override
   State<AddHabitScreen> createState() => _AddHabitScreenState();
@@ -23,6 +25,19 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
     'Personal',
   ];
 
+  bool get _isEditing => widget.habit != null;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.habit != null) {
+      _titleController.text = widget.habit!.title;
+      _descriptionController.text = widget.habit!.description;
+      _selectedCategory = widget.habit!.category;
+    }
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -32,23 +47,44 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
 
   Future<void> _saveHabit() async {
     if (_formKey.currentState!.validate()) {
-      final newHabit = Habit(
-        title: _titleController.text.trim(),
-        description: _descriptionController.text.trim(),
-        category: _selectedCategory,
-        createdAt: DateTime.now().toIso8601String(),
-        isCompleted: false,
-      );
+      if (_isEditing) {
+        final updatedHabit = Habit(
+          id: widget.habit!.id,
+          title: _titleController.text.trim(),
+          description: _descriptionController.text.trim(),
+          category: _selectedCategory,
+          createdAt: widget.habit!.createdAt,
+          isCompleted: widget.habit!.isCompleted,
+        );
 
-      await DatabaseHelper.instance.insertHabit(newHabit);
+        await DatabaseHelper.instance.updateHabit(updatedHabit);
 
-      if (!mounted) return;
+        if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Habit saved successfully!'),
-        ),
-      );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Habit updated successfully!'),
+          ),
+        );
+      } else {
+        final newHabit = Habit(
+          title: _titleController.text.trim(),
+          description: _descriptionController.text.trim(),
+          category: _selectedCategory,
+          createdAt: DateTime.now().toIso8601String(),
+          isCompleted: false,
+        );
+
+        await DatabaseHelper.instance.insertHabit(newHabit);
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Habit saved successfully!'),
+          ),
+        );
+      }
 
       Navigator.pop(context, true);
     }
@@ -58,7 +94,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Habit'),
+        title: Text(_isEditing ? 'Edit Habit' : 'Add Habit'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -110,7 +146,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _saveHabit,
-                child: const Text('Save Habit'),
+                child: Text(_isEditing ? 'Update Habit' : 'Save Habit'),
               ),
             ],
           ),
