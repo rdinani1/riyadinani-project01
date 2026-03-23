@@ -84,64 +84,69 @@ class _HabitListScreenState extends State<HabitListScreen> {
                   child: Padding(
                     padding: EdgeInsets.all(24),
                     child: Text(
-                      'No habits yet.\nTap the + button to add your first habit.',
+                      'No habits yet.\nPull down or tap + to add your first habit.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
                 )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(12),
-                  itemCount: _habits.length,
-                  itemBuilder: (context, index) {
-                    final habit = _habits[index];
+              : RefreshIndicator(
+                  onRefresh: _loadHabits,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(12),
+                    itemCount: _habits.length,
+                    itemBuilder: (context, index) {
+                      final habit = _habits[index];
 
-                    return Card(
-                      elevation: 3,
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        leading: CircleAvatar(
-                          child: Icon(_getCategoryIcon(habit.category)),
-                        ),
-                        title: Text(
-                          habit.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                      return Card(
+                        elevation: 3,
+                        margin: const EdgeInsets.only(bottom: 12),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
                           ),
-                        ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(top: 6),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Category: ${habit.category}'),
-                              const SizedBox(height: 4),
-                              Text(
-                                habit.description.isEmpty
-                                    ? 'No description added'
-                                    : habit.description,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                          leading: CircleAvatar(
+                            child: Icon(_getCategoryIcon(habit.category)),
                           ),
+                          title: Text(
+                            habit.title,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Category: ${habit.category}'),
+                                const SizedBox(height: 4),
+                                Text(
+                                  habit.description.isEmpty
+                                      ? 'No description added'
+                                      : habit.description,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          trailing: Icon(
+                            habit.isCompleted
+                                ? Icons.check_circle
+                                : Icons.radio_button_unchecked,
+                            color: habit.isCompleted
+                                ? Colors.green
+                                : Colors.grey,
+                            size: 28,
+                          ),
+                          onTap: () => _openHabitDetails(habit),
                         ),
-                        trailing: Icon(
-                          habit.isCompleted
-                              ? Icons.check_circle
-                              : Icons.radio_button_unchecked,
-                          color: habit.isCompleted ? Colors.green : Colors.grey,
-                          size: 28,
-                        ),
-                        onTap: () => _openHabitDetails(habit),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
       floatingActionButton: FloatingActionButton(
         onPressed: _goToAddHabitScreen,
