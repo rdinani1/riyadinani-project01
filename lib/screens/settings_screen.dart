@@ -64,42 +64,99 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.dispose();
   }
 
+  Widget _buildSectionCard({
+    required Widget child,
+  }) {
+    return Card(
+      elevation: 3,
+      margin: const EdgeInsets.only(bottom: 18),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: child,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
             const Text(
-              'Profile Settings',
+              'User Preferences',
               style: TextStyle(
-                fontSize: 22,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Username',
-                border: OutlineInputBorder(),
+            const SizedBox(height: 8),
+            const Text(
+              'Customize your app experience and save your preferences locally.',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 20),
+            _buildSectionCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Profile',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Username',
+                      hintText: 'Enter your name',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: _saveUsername,
+                      icon: const Icon(Icons.save),
+                      label: const Text('Save Username'),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _saveUsername,
-              child: const Text('Save Username'),
-            ),
-            const SizedBox(height: 24),
-            const Divider(),
-            SwitchListTile(
-              title: const Text('Dark Mode'),
-              value: _darkMode,
-              onChanged: _toggleDarkMode,
+            _buildSectionCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Appearance',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Dark Mode'),
+                    subtitle: const Text(
+                      'Enable or disable dark theme',
+                    ),
+                    value: _darkMode,
+                    onChanged: _toggleDarkMode,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
