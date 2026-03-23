@@ -25,6 +25,28 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
   }
 
   Future<void> _toggleCompletion() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Update Status'),
+        content: const Text(
+          'Are you sure you want to change this habit’s completion status?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Confirm'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
     final updatedHabit = Habit(
       id: _habit.id,
       title: _habit.title,
