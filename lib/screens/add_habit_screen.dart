@@ -94,19 +94,29 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Edit Your Habit' : 'Add New Habit'),
+        title: Text(_isEditing ? 'Edit Habit' : 'Add New Habit'),
+        centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
+              Text(
+                _isEditing
+                    ? 'Update your habit details below.'
+                    : 'Create a new habit to start building consistency.',
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 24),
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
                   labelText: 'Habit Title',
+                  hintText: 'Enter habit title',
                   border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.edit_note),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
@@ -115,21 +125,25 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
               TextFormField(
                 controller: _descriptionController,
                 maxLines: 3,
                 decoration: const InputDecoration(
                   labelText: 'Description',
+                  hintText: 'Enter habit description',
                   border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.description),
+                  alignLabelWithHint: true,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
               DropdownButtonFormField<String>(
                 value: _selectedCategory,
                 decoration: const InputDecoration(
                   labelText: 'Category',
                   border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.category),
                 ),
                 items: _categories.map((category) {
                   return DropdownMenuItem<String>(
@@ -143,10 +157,14 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _saveHabit,
-                child: Text(_isEditing ? 'Update Habit' : 'Save Habit'),
+              const SizedBox(height: 28),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _saveHabit,
+                  icon: Icon(_isEditing ? Icons.save : Icons.add),
+                  label: Text(_isEditing ? 'Update Habit' : 'Save Habit'),
+                ),
               ),
             ],
           ),

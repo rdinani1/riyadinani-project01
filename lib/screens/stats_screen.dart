@@ -29,16 +29,47 @@ class _StatsScreenState extends State<StatsScreen> {
     });
   }
 
+  Widget _buildStatCard({
+    required IconData icon,
+    required String title,
+    required String value,
+  }) {
+    return Card(
+      elevation: 3,
+      margin: const EdgeInsets.only(bottom: 14),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 10,
+        ),
+        leading: CircleAvatar(
+          child: Icon(icon),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        trailing: Text(
+          value,
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final incompleteHabits = totalHabits - completedHabits;
-    final completionRate = totalHabits == 0
-        ? 0.0
-        : (completedHabits / totalHabits) * 100;
+    final completionRate =
+        totalHabits == 0 ? 0.0 : (completedHabits / totalHabits) * 100;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Habit Stats'),
+        centerTitle: true,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -48,51 +79,37 @@ class _StatsScreenState extends State<StatsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Your Progress',
+                    'Your Progress Overview',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 26,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Card(
-                    child: ListTile(
-                      title: const Text('Total Habits'),
-                      trailing: Text(
-                        totalHabits.toString(),
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                    ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Track how well you are keeping up with your habits.',
+                    style: TextStyle(fontSize: 16),
                   ),
-                  const SizedBox(height: 12),
-                  Card(
-                    child: ListTile(
-                      title: const Text('Completed Habits'),
-                      trailing: Text(
-                        completedHabits.toString(),
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                    ),
+                  const SizedBox(height: 24),
+                  _buildStatCard(
+                    icon: Icons.track_changes,
+                    title: 'Total Habits',
+                    value: totalHabits.toString(),
                   ),
-                  const SizedBox(height: 12),
-                  Card(
-                    child: ListTile(
-                      title: const Text('Incomplete Habits'),
-                      trailing: Text(
-                        incompleteHabits.toString(),
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                    ),
+                  _buildStatCard(
+                    icon: Icons.check_circle,
+                    title: 'Completed Habits',
+                    value: completedHabits.toString(),
                   ),
-                  const SizedBox(height: 12),
-                  Card(
-                    child: ListTile(
-                      title: const Text('Completion Rate'),
-                      trailing: Text(
-                        '${completionRate.toStringAsFixed(1)}%',
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                    ),
+                  _buildStatCard(
+                    icon: Icons.pending_actions,
+                    title: 'Incomplete Habits',
+                    value: incompleteHabits.toString(),
+                  ),
+                  _buildStatCard(
+                    icon: Icons.percent,
+                    title: 'Completion Rate',
+                    value: '${completionRate.toStringAsFixed(1)}%',
                   ),
                 ],
               ),
