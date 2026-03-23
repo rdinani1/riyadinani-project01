@@ -63,7 +63,9 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
 
     if (result == true && _habit.id != null) {
       final habits = await DatabaseHelper.instance.getHabits();
-      final refreshedHabit = habits.firstWhere((habit) => habit.id == _habit.id);
+      final refreshedHabit = habits.firstWhere(
+        (habit) => habit.id == _habit.id,
+      );
 
       setState(() {
         _habit = refreshedHabit;
@@ -172,9 +174,10 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: _editHabit,
-                  child: const Text('Edit Habit'),
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Edit Habit'),
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton(
