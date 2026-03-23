@@ -94,7 +94,7 @@ class _AddHabitScreenState extends State<AddHabitScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Edit Habit' : 'Add Habit'),
+        title: Text(_isEditing ? 'Edit Your Habit' : 'Add New Habit'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

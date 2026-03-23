@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'habit_list_screen.dart';
+import 'stats_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,18 +11,37 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Habit Mastery League'),
       ),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text('View My Habits'),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HabitListScreen(),
-              ),
-            );
-          },
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: ElevatedButton(
+              child: const Text('View My Habits'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HabitListScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: ElevatedButton(
+              child: const Text('View Stats'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StatsScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
