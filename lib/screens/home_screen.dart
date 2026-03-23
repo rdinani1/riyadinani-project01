@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'habit_list_screen.dart';
 import 'stats_screen.dart';
 import 'settings_screen.dart';
@@ -12,6 +13,11 @@ class HomeScreen extends StatelessWidget {
     required this.isDarkMode,
     required this.onThemeChanged,
   });
+
+  Future<String> _loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('username') ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +36,21 @@ class HomeScreen extends StatelessWidget {
               size: 80,
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Welcome to Habit Mastery League',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-              ),
+            FutureBuilder<String>(
+              future: _loadUsername(),
+              builder: (context, snapshot) {
+                final name = snapshot.data ?? '';
+                return Text(
+                  name.isEmpty
+                      ? 'Welcome to Habit Mastery League'
+                      : 'Welcome, $name',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 12),
             const Text(
