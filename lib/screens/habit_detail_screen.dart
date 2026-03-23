@@ -52,6 +52,44 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
     );
   }
 
+  Future<void> _deleteHabit() async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Habit'),
+          content: const Text(
+            'Are you sure you want to delete this habit?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldDelete == true && _habit.id != null) {
+      await DatabaseHelper.instance.deleteHabit(_habit.id!);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Habit deleted successfully!'),
+        ),
+      );
+
+      Navigator.pop(context, true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,6 +151,15 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                         ? 'Mark as Not Completed'
                         : 'Mark as Completed',
                   ),
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: _deleteHabit,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Delete Habit'),
                 ),
               ],
             ),

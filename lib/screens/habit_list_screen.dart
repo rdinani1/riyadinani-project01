@@ -42,13 +42,17 @@ class _HabitListScreenState extends State<HabitListScreen> {
     }
   }
 
-  void _openHabitDetails(Habit habit) {
-    Navigator.push(
+  Future<void> _openHabitDetails(Habit habit) async {
+    final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => HabitDetailScreen(habit: habit),
       ),
     );
+
+    if (result == true) {
+      _loadHabits();
+    }
   }
 
   @override
